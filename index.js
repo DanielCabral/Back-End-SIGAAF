@@ -8,7 +8,8 @@ app.use(express.urlencoded({ extended: false }));
 // parse application/json
 app.use(bodyParser.json())
 
-const { User } = require('./app/models');
+const { User,Office} = require('./app/models');
+
 
     app.get('/', (req, res) => {
         res.send('Home');
@@ -25,7 +26,7 @@ const { User } = require('./app/models');
           user_function: user_function
         })
           .catch(function(err){
-            console.log(err)
+            res.send(`Erro: ${err}`)
           });
         res.json(user);
     });//Criar usuario
@@ -35,7 +36,6 @@ const { User } = require('./app/models');
       .catch(function(err){
         res.send(`Erro: ${err}`)
       });
-      console.log("All users:", JSON.stringify(users, null, 2));
       res.json(users);
     }); //Listar todos os usuarios
     
@@ -55,7 +55,7 @@ const { User } = require('./app/models');
     app.patch('/changemail/:id', async (req, res) => {
       const {email}=req.query;
       const {id}=req.params;
-      await User.update({ user_email: email }, {
+      const result= await User.update({ user_email: email }, {
         where: {
           id: id
         }
@@ -63,13 +63,16 @@ const { User } = require('./app/models');
       .catch(function(err){
         res.send(`Erro ${err}`);
       });
-      res.send('Ok')
+      res.status(200).json({'rows_affected': result});
     }); //Editar email
 
     app.patch('/changepassword/:id', async (req, res) => {
       const {password,new_password}=req.body;
       const {id}=req.params;
-      await User.update({ user_password: new_password }, {
+      console.log(id);
+      console.log(password);
+      
+      const result=await User.update({ user_password: new_password }, {
         where: {
           id: id,
           user_password: password
@@ -78,21 +81,21 @@ const { User } = require('./app/models');
       .catch(function(err){
         res.send(`Erro ${err}`);
       });
-      res.send('Ok')
-    }); //Editar email de usuario
+      res.status(200).json({'rows_affected': result});
+    }); //Editar senha de usuario
     
 
     app.delete('/users/:id', async (req, res) => {
       const {id}=req.params;
       console.log(id);
-      await User.destroy({
+      const result= await User.destroy({
         where: {
           id: id
         }
       }).catch(function(err){
         res.send(`Erro ${err}`);
       });
-      res.send('OK');
+      res.status(200).json({'rows_affected': result});
     }); //Deletar usuario
       
 
@@ -100,19 +103,28 @@ const { User } = require('./app/models');
     //Rotas de cargos
     app.post('/registeroffice', async (req, res) => {
       const {office_name}=req.body; 
-      const user = await Office.create({
-        user_name: office_name,
+
+      const office = await Office.create({
+        office_name: office_name
       })
         .catch(function(err){
           console.log(err)
         });
-      res.json(user);
+      res.json(office);
   });//Criar cargo
+
+  app.get('/offices', async (req, res) => {
+    const offices = await Office.findAll()
+    .catch(function(err){
+      res.send(`Erro: ${err}`)
+    });
+    res.json(offices);
+  }); //Listar todos os cargos
 
   app.patch('/changeofficename/:id', async (req, res) => {
     const {office_name}=req.query;
     const {id}=req.params;
-    await Office.update({ office_name: office_name }, {
+    const result= await Office.update({ office_name: office_name }, {
       where: {
         id: id
       }
@@ -120,7 +132,18 @@ const { User } = require('./app/models');
     .catch(function(err){
       res.send(`Erro ${err}`);
     });
-    res.send('Ok')
-  }); //Editar email de usuario
+    res.status(200).json({'rows_affected': result});
+  }); //Editar nome de cargo
 
-    app.listen(3000);
+  app.delete('/office/:id', async (req, res) => {
+    const {id}=req.params;
+    const result= await Office.destroy({
+      where: {
+        id: id
+      }
+    }).catch(function(err){
+      res.send(`Erro ${err}`);
+    });
+    res.status(200).json({'rows_affected': result});
+  }); //Deletar usuario
+    app.listen(3333);

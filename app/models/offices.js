@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) => {
     const Office = sequelize.define('Office', {
-      office_nome: DataTypes.STRING,
+      office_name: DataTypes.STRING,
     });
     return Office;
   }

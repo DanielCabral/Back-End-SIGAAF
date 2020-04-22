@@ -8,9 +8,9 @@ module.exports = {
         type: DataTypes.INTEGER,
       },
      
-      office_nome: {
+      office_name: {
         allowNull: false,
-        type: DataTypes.INTEGER,
+        type: DataTypes.STRING,
       },
       createdAt: {
         allowNull: false,

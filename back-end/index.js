@@ -1,7 +1,10 @@
 var bodyParser = require('body-parser');
 const express = require('express');
+const cors=require('cors');
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.urlencoded({ extended: false }));
 
@@ -10,6 +13,18 @@ app.use(bodyParser.json())
 
 const { User,Office} = require('./app/models');
 
+
+    //Middlewares
+    function logRequests(request, response, next){
+      const {method, url}=request;
+      const logLabel=`[${method.toUpperCase()}] ${url}`;
+      console.log(logLabel);
+      return next();
+    }
+    
+    app.use(logRequests);
+
+    //Dashboard
 
     app.get('/', (req, res) => {
         res.send('Home');
@@ -30,6 +45,25 @@ const { User,Office} = require('./app/models');
           });
         res.json(user);
     });//Criar usuario
+
+    app.post('/logon', async (req, res) => {
+      const {name, password}= req.body;
+      console.log('logon');
+      const user = await User.findAll({
+        where: {
+          user_name: name,
+          user_password:password
+        }
+      }) 
+      .catch(function(err){
+        res.status(400).send(`Erro: ${err}`)
+      });
+      if(user.length > 0){
+        res.json(user);
+      }else{
+        res.status(400).send();
+      }
+    });
 
     app.get('/users', async (req, res) => {
       const users = await User.findAll()
@@ -147,3 +181,5 @@ const { User,Office} = require('./app/models');
     res.status(200).json({'rows_affected': result});
   }); //Deletar usuario
     app.listen(3333);
+
+    

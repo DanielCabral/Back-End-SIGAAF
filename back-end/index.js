@@ -1,6 +1,7 @@
 var bodyParser = require('body-parser');
 const express = require('express');
 const cors=require('cors');
+const { User,Office} = require('./app/models');
 
 const app = express();
 
@@ -10,8 +11,6 @@ app.use(express.urlencoded({ extended: false }));
 
 // parse application/json
 app.use(bodyParser.json())
-
-const { User,Office} = require('./app/models');
 
 
     //Middlewares
@@ -24,6 +23,7 @@ const { User,Office} = require('./app/models');
     
     app.use(logRequests);
 
+       
     //Dashboard
 
     app.get('/', (req, res) => {

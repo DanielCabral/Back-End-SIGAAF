@@ -31,6 +31,16 @@ module.exports = {
         allowNull: false,
         type: DataTypes.STRING,
       },
+     /* companyId: {
+        primaryKey: true,
+        allowNull: false,
+        autoIncrement: false,
+        unique:true,
+        references: {
+          model: 'libraries',
+          key: 'id',
+        },
+      },*/
       createdAt: {
         allowNull: false,
         type: DataTypes.DATE,

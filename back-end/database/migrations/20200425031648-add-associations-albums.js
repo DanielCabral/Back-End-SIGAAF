@@ -8,7 +8,7 @@ module.exports = {
         {
           type: DataTypes.INTEGER,
           references: {
-            model: 'Librarys', // name of Target model
+            model: 'Libraries', // name of Target model
             key: 'id', // key in Target model that we're referencing
           },
           onUpdate: 'CASCADE',

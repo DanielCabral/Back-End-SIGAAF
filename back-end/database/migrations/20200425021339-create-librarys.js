@@ -2,12 +2,12 @@
 
 module.exports = {
     up: (queryInterface, DataTypes) => {
-      return queryInterface.createTable('Librarys', {
+      return queryInterface.createTable('Libraries', {
         id: {
-          type: DataTypes.UUID,
+          type: DataTypes.INTEGER,
           primaryKey: true,
           allowNull: false,
-          autoIncrement: false,
+          autoIncrement: true,
           unique:true,
       },
     
@@ -28,6 +28,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('Librarys');
+    return queryInterface.dropTable('Libraries');
   }
 };
